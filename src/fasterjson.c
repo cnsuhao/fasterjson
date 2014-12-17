@@ -612,10 +612,10 @@ static int _TravelJsonBuffer( register char **json_ptr , char *jpath , int jpath
 	{
 		return _TravelJsonLeafBuffer( json_ptr , jpath , jpath_len , jpath_size
 					, pfuncCallbackOnEnterJsonBranch
-					, pfuncCallbackOnEnterJsonBranch
-					, pfuncCallbackOnEnterJsonBranch
-					, pfuncCallbackOnEnterJsonBranch
-					, pfuncCallbackOnEnterJsonBranch
+					, pfuncCallbackOnLeaveJsonBranch
+					, pfuncCallbackOnEnterJsonArray
+					, pfuncCallbackOnLeaveJsonArray
+					, pfuncCallbackOnJsonLeaf
 					, p );
 	}
 	else
