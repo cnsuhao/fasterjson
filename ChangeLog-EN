@@ -1,3 +1,6 @@
+ver 1.1.1	2015-05-02	calvin
+		* Passed json standard calibration testing by 'test/data/*' , with some fault tolerance
+
 ver 1.1.0	2015-05-01	calvin
 		* Support encoding UTF-8 or GB18030/GBk/GB2312
 		* Support uneacape for "\uxxxx"
