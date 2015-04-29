@@ -137,6 +137,7 @@ int main( int argc , char *argv[] )
 			time( & t1 );
 			for( c = 0 ; c < count ; c++ )
 			{
+#if 0
 				Document doc;    // character type defaults to char
 				doc.Parse<0>(json_buffer) ;    // 0 means default parse flags
 				if (doc.HasParseError())
@@ -144,6 +145,18 @@ int main( int argc , char *argv[] )
 					printf("error :%d\n", doc.GetParseError());
 					return 2;
 				}
+#else
+				Reader	reader ;
+				InsituStringStream is(json_buffer);
+				BaseReaderHandler<> handler;
+				ParseResult r = reader.Parse<kParseInsituFlag>( is , handler );
+				if( r.IsError() )
+				{
+					printf("error :%d\n", r.Code());
+					return 2;
+				}
+#endif
+					
 				
 				memcpy( json_buffer , json_buffer_bak , json_len );
 			}
