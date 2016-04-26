@@ -13,7 +13,7 @@
 #define MAX(_a_,_b_) (_a_>_b_?_a_:_b_)
 #endif
 
-int __FASTERJSON_VERSION_1_1_5 = 0 ;
+int __FASTERJSON_VERSION_1_1_6 = 0 ;
 
 #define FASTERJSON_TOKEN_EOF		-1
 #define FASTERJSON_TOKEN_LBB		1	/* { */
@@ -23,6 +23,7 @@ int __FASTERJSON_VERSION_1_1_5 = 0 ;
 #define FASTERJSON_TOKEN_COLON		5	/* : */
 #define FASTERJSON_TOKEN_COMMA		6	/* , */
 #define FASTERJSON_TOKEN_TEXT		9
+#define FASTERJSON_TOKEN_SPECIAL	10
 
 #define FASTERJSON_INFO_END_OF_BUFFER	150
 
@@ -195,7 +196,6 @@ char		g_fasterjson_encoding = FASTERJSON_ENCODING_UTF8 ;
 		else							\
 		{							\
 			char	leading_zero_flag = 0 ;			\
-			int	len ;					\
 			if( *(_base_) == '0' )				\
 			{						\
 				leading_zero_flag = 1 ;			\
@@ -254,21 +254,28 @@ char		g_fasterjson_encoding = FASTERJSON_ENCODING_UTF8 ;
 			{										\
 				return _eof_ret_;							\
 			}										\
-			len = (_base_) - (_begin_) ;							\
+			(_len_) = (_base_) - (_begin_) ;						\
 			if( *(_begin_) == 't' )								\
 			{										\
-				if( len != 4 || MEMCMP( (_begin_) , != , "true" , len ) )		\
+				if( (_len_) != 4 || MEMCMP( (_begin_) , != , "true" , len ) )		\
 					return FASTERJSON_ERROR_JSON_INVALID;				\
+				(_len_) = 1 ;								\
+				(_tag_) = FASTERJSON_TOKEN_SPECIAL ;					\
 			}										\
 			else if( *(_begin_) == 'f' )							\
 			{										\
-				if( len != 5 || MEMCMP( (_begin_) , != , "false" , len ) )		\
+				if( (_len_) != 5 || MEMCMP( (_begin_) , != , "false" , len ) )		\
 					return FASTERJSON_ERROR_JSON_INVALID;				\
+				(_len_) = 1 ;								\
+				(_tag_) = FASTERJSON_TOKEN_SPECIAL ;					\
 			}										\
 			else if( *(_begin_) == 'n' )							\
 			{										\
-				if( len != 4 || MEMCMP( (_begin_) , != , "null" , len ) )		\
+				if( (_len_) != 4 || MEMCMP( (_begin_) , != , "null" , len ) )		\
 					return FASTERJSON_ERROR_JSON_INVALID;				\
+				*(_begin_) = FASTERJSON_NULL ;						\
+				(_len_) = 1 ;								\
+				(_tag_) = FASTERJSON_TOKEN_SPECIAL ;					\
 			}										\
 		}											\
 	}												\
@@ -324,7 +331,7 @@ static int _TravelJsonArrayBuffer( char top , register char **json_ptr , char *j
 	while(1)
 	{
 		TOKENJSON(*json_ptr,begin,len,tag,quotes,FASTERJSON_ERROR_END_OF_BUFFER)
-		if( tag == FASTERJSON_TOKEN_TEXT )
+		if( tag == FASTERJSON_TOKEN_TEXT || tag == FASTERJSON_TOKEN_SPECIAL )
 		{
 			if( quotes == '\'' )
 				return FASTERJSON_ERROR_JSON_INVALID_ON_TOKEN_LEAF_1;
@@ -665,7 +672,7 @@ static int _TravelJsonLeafBuffer( char top , register char **json_ptr , char *jp
 		}
 		
 		TOKENJSON(*json_ptr,begin,len,tag,quotes,FASTERJSON_ERROR_END_OF_BUFFER)
-		if( tag == FASTERJSON_TOKEN_TEXT )
+		if( tag == FASTERJSON_TOKEN_TEXT || tag == FASTERJSON_TOKEN_SPECIAL )
 		{
 			if( quotes == '\'' )
 				return FASTERJSON_ERROR_JSON_INVALID_ON_TOKEN_LEAF_3;

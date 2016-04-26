@@ -306,6 +306,8 @@ _WINDLL_FUNC int TravelJsonBuffer4( char *json_buffer , char *jpath , int jpath_
 #define FASTERJSON_ENCODING_GB18030		1 /* GB18030/GBK/GB2312 */
 _WINDLL_FUNC char		g_fasterjson_encoding ;
 
+#define FASTERJSON_NULL				127
+
 #ifdef __cplusplus
 }
 #endif

@@ -1,3 +1,6 @@
+ver 1.1.6	2016-04-26	calvin
+		* Support `null`
+
 ver 1.1.5	2015-11-29	calvin
 		* Solved a problem about exporting global varible g_fasterjson_encoding
 

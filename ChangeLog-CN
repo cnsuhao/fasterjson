@@ -1,3 +1,6 @@
+ver 1.1.6	2016-04-26	calvin
+		* * 加入null支持
+
 ver 1.1.5	2015-11-29	calvin
 		* 解决了导出全局变量g_fasterjson_encoding的问题
 
